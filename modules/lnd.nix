@@ -139,7 +139,7 @@ let
       description = "The group as which to run LND.";
     };
     certPath = mkOption {
-      readOnly = true;
+      #readOnly = true;
       default = "${secretsDir}/lnd-cert";
       description = "LND TLS certificate path.";
     };
