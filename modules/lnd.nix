@@ -159,8 +159,8 @@ let
   configFile = pkgs.writeText "lnd.conf" ''
     datadir=${cfg.dataDir}
     logdir=${cfg.dataDir}/logs
-    tlscertpath=${cfg.certPath}
-    tlskeypath=${secretsDir}/lnd-key
+    tlscertpath=${cfg.certPath}/lnd-cert
+    tlskeypath=${cfg.certPath}/lnd-key
 
     listen=${toString cfg.address}:${toString cfg.port}
     rpclisten=${cfg.rpcAddress}:${toString cfg.rpcPort}
