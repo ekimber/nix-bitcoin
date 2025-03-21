@@ -2,7 +2,9 @@
 set -euo pipefail
 
 # This script does the following:
-# - Update all flake inputs, including nixpkgs
+# - When called without arguments, update all flake inputs, including nixpkgs.
+# - When called with a version argument, set input `nixpkgs` in `flake.nix` to the
+#   specified version and only update this input.
 # - Print version updates of pinned pkgs like so:
 #     Pkg updates in nixpkgs unstable:
 #     bitcoin: 0.20.0 -> 0.21.1
@@ -39,34 +41,33 @@ if [[ $forceRun ]] && ! git diff --quiet ../flake.{nix,lock}; then
     exit 1
 fi
 
-# Support Nix >=2.19
-{
-    versionGreaterThanOrEqual() {
-        [[ $1 != $(echo -e "$1\n$2" | sort -V | head -n1) || $1 == "$2" ]]
-    }
-    nixVersion=$(nix --version | cut -d\  -f 3)
-    if versionGreaterThanOrEqual "$nixVersion" 2.19; then
-        # https://nixos.org/manual/nix/stable/release-notes/rl-2.19#:~:text=nix%20flake%20update
-        nixUpdateArg=--flake
-    else
-        nixUpdateArg=
-    fi
-}
-
-echo "Updating flake 'nixos-search'"
-nix flake update $nixUpdateArg ../test/nixos-search
-echo
+if [[ ! $nixosVersion ]]; then
+    echo "Updating flake 'nixos-search'"
+    nix flake update --flake ../test/nixos-search
+    echo
+fi
 
 versions=$(nix eval --json -f update-flake.nix versions)
 
 ## Uncomment the following to generate a version change message for testing
 # versions=$(echo "$versions" | sed 's|1|0|g')
 
+setVersion() {
+    sed -Ei "s|($1)[0-9.]+|\1$nixosVersion|" "$2"
+}
+
 echo "Updating main flake"
 if [[ $nixosVersion ]]; then
-    sed -Ei "s|(nixpkgs.url = .*nixos-)[^\"]+|\1$nixosVersion|" ../flake.nix
+    setVersion 'nixpkgs.url = .*?nixos-' ../flake.nix
+    setVersion 'system.stateVersion = "' ../examples/configuration.nix
+    setVersion 'nix-bitcoin.url = .*?/nixos-' ../examples/flakes/flake.nix
+    setVersion 'nix-bitcoin.url = .*?/nixos-' ../examples/container/flake.nix
+    setVersion 'image: nixpkgs.*?nixos-' ../.cirrus.yml
+    setVersion 'update-flake.sh ' ../dev/README.md
+    nix flake update nixpkgs --flake ..
+else
+    nix flake update --flake ..
 fi
-nix flake update $nixUpdateArg ..
 
 echo
 nix eval --raw -f update-flake.nix --argstr prevVersions "$versions" showUpdates; echo

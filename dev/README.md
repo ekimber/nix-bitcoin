@@ -97,9 +97,5 @@ It's easiest to use an existing service as a template:
   Most other services use packages that are already included in nixpkgs.
 
 ## Switching to a new NixOS release
-
-- [flake.nix](../flake.nix): update `nixpkgs.url`
-- [cirrus.yml](../.cirrus.yml): update toplevel container -> image attribute
-- [examples/configuration.nix](../examples/configuration.nix): update `system.stateVersion`
-- [examples/flakes/flake.nix](../examples/flakes/flake.nix): update `inputs.nix-bitcoin.url`
+- Run command `update-flake.sh 24.11`
 - Treewide: check if any `TODO-EXTERNAL` comments can be resolved

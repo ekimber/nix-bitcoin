@@ -56,15 +56,15 @@
   #
   # == REST server
   # Set this to create a clightning REST onion service.
-  # This also adds binary `lndconnect-clightning` to the system environment.
+  # This also adds binary `lnconnect-clnrest` to the system environment.
   # This binary creates QR codes or URLs for connecting applications to clightning
   # via the REST onion service.
   # You can also connect via WireGuard instead of Tor.
   # See ../docs/services.md for details.
   #
-  # services.clightning-rest = {
+  # services.clightning.plugins.clnrest = {
   #   enable = true;
-  #   lndconnect = {
+  #   lnconnect = {
   #     enable = true;
   #     onion = true;
   #   };
@@ -318,7 +318,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 
   # The nix-bitcoin release version that your config is compatible with.
   # When upgrading to a backwards-incompatible release, nix-bitcoin will display an

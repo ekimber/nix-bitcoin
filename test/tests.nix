@@ -43,12 +43,8 @@ let
 
       # TODO-EXTERNAL:
       # When WAN is disabled, DNS bootstrapping slows down service startup by ~15 s.
-      # TODO-EXTERNAL:
-      # When bitcoind is not fully synced, the offers plugin in clightning 24.05
-      # crashes (see https://github.com/ElementsProject/lightning/issues/7378).
       services.clightning.extraConfig = ''
         ${optionalString config.test.noConnections "disable-dns"}
-        disable-plugin=offers
       '';
       test.data.clightning-plugins = let
         plugins = config.services.clightning.plugins;
@@ -64,6 +60,7 @@ let
         nbPkgs = config.nix-bitcoin.pkgs;
         pluginPkgs = nbPkgs.clightning-plugins // {
           clboss.path = "${plugins.clboss.package}/bin/clboss";
+          clnrest.path = "${plugins.clnrest.package}/bin/clnrest";
           trustedcoin.path = "${plugins.trustedcoin.package}/bin/trustedcoin";
         };
       in map (plugin: pluginPkgs.${plugin}.path) enabled;
@@ -102,6 +99,7 @@ let
       nix-bitcoin.onionServices.lnd.public = true;
 
       tests.lndconnect-onion-lnd = with cfg.lnd.lndconnect; enable && onion;
+      tests.lnconnect-onion-clnrest = with cfg.clightning.plugins.clnrest.lnconnect; enable && onion;
       tests.lndconnect-onion-clightning = with cfg.clightning-rest.lndconnect; enable && onion;
 
       tests.lightning-loop = cfg.lightning-loop.enable;
@@ -193,6 +191,10 @@ let
         enable = true;
         encrypt = true;
         local.directory = "/var/backup/clightning";
+      };
+      services.clightning.plugins.clnrest = {
+        enable = true;
+        lnconnect = { enable = true; onion = true; };
       };
       test.features.clightningPlugins = true;
       services.rtl.enable = true;

@@ -91,7 +91,7 @@ let
   enabledServices = filterAttrs (n: v: isEnabled n) cfg.services;
   isEnabled = x: config.services.${x}.enable;
 
-  ip = "${pkgs.iproute}/bin/ip";
+  ip = "${pkgs.iproute2}/bin/ip";
   iptables = "${config.networking.firewall.package}/bin/iptables";
 
   bridgeIp = "169.254.${toString cfg.addressblock}.10";
@@ -286,7 +286,7 @@ in {
         in
           optional nodes.lnd.enable "lnd" ++
           optional (nodes.lnd.enable && nodes.lnd.loop) "lightning-loop" ++
-          optional nodes.clightning.enable "clightning-rest";
+          optional nodes.clightning.enable "clightning";
       };
       clightning-rest = {
         id = 30;
@@ -315,6 +315,7 @@ in {
     };
 
     services.clightning.address = netns.clightning.address;
+    services.clightning.plugins.clnrest.address = netns.clightning.address;
 
     services.lnd = {
       address = netns.lnd.address;

@@ -179,6 +179,11 @@ def _():
     assert_running("lnd")
     assert_matches("runuser -u operator -- lndconnect --url", ".onion")
 
+@test("lnconnect-onion-clnrest")
+def _():
+    assert_running("clightning")
+    assert_matches("runuser -u operator -- lnconnect-clnrest --url", ".onion")
+
 @test("lndconnect-onion-clightning")
 def _():
     assert_running("clightning-rest")
@@ -235,7 +240,7 @@ def _():
         '"version"',
     )
     # Test web server response
-    assert_matches(f"curl -fsS -L {ip('btcpayserver')}:23000", "Welcome to your BTCPay&#xA0;Server")
+    assert_matches(f"curl -fsS -L {ip('btcpayserver')}:23000", "Welcome to BTCPay Server")
 
 @test("rtl")
 def _():
@@ -381,7 +386,6 @@ def _():
 @test("restart-bitcoind")
 def _():
     # Sanity-check system by restarting bitcoind.
-    # This also restarts all services depending on bitcoind.
     succeed("systemctl restart bitcoind")
 
 @test("regtest")
@@ -447,11 +451,10 @@ def _():
     def expect_clightning_log(str):
         machine.wait_until_succeeds(log_has_string("clightning", str))
 
-    expect_clightning_log("plugin-trustedcoin[^^]\[0m\s+bitcoind RPC working")
-    expect_clightning_log("plugin-trustedcoin[^^]\[0m\s+estimatefees error: none of the esploras returned usable responses")
+    expect_clightning_log(r"plugin-trustedcoin\b.*?\bbitcoind RPC working")
     if "regtest" in enabled_tests:
         num_blocks = test_data["num_blocks"]
-        expect_clightning_log(f"plugin-trustedcoin[^^]\[0m\s+returning block {num_blocks}")
+        expect_clightning_log(rf"plugin-trustedcoin\b.*?\breturning block {num_blocks}")
 
 
 if "netns-isolation" in enabled_tests:
