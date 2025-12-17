@@ -139,8 +139,8 @@ let
       description = "The group as which to run LND.";
     };
     certPath = mkOption {
-      readOnly = true;
-      default = "${secretsDir}/lnd-cert";
+      #readOnly = true;
+      default = "${secretsDir}";
       description = "LND TLS certificate path.";
     };
     tor = nbLib.tor;
@@ -158,8 +158,8 @@ let
   networkDir = cfg.networkDir;
   configFile = pkgs.writeText "lnd.conf" ''
     datadir=${cfg.dataDir}
-    tlscertpath=${cfg.certPath}
-    tlskeypath=${secretsDir}/lnd-key
+    tlscertpath=${cfg.certPath}/lnd-cert
+    tlskeypath=${cfg.certPath}/lnd-key
 
     # We're logging via journald
     logging.file.disable=1
