@@ -4,19 +4,19 @@ pkgs: pkgsUnstable: pkgs-25_05:
   inherit (pkgs)
     bitcoin
     bitcoind
+    btcpayserver
     charge-lnd
+    clightning
     electrs
+    elementsd
     extra-container
-    fulcrum
     lightning-pool
     lndconnect;
 
   inherit (pkgsUnstable)
     bitcoind-knots
-    btcpayserver
     clboss
-    clightning
-    elementsd
+    fulcrum
     lightning-loop
     lnd;
 

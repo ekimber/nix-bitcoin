@@ -1,41 +1,37 @@
 # Security Policy
 
-## Reporting a Vulnerability
-
-To report security issues send an encrypted email to the following nix-bitcoin developers or contact them via [matrix](https://matrix.org/).
-
-| Name          | GPG Fingerprint                                    | Email                   | Matrix                                                                             |
-|---------------|----------------------------------------------------|-------------------------|------------------------------------------------------------------------------------|
-| Jonas Nick    | 36C7 1A37 C9D9 88BD E825  08D9 B1A7 0E4F 8DCD 0366 | jonasd.nick@gmail.com   | [@nickler:nixbitcoin.org](https://matrix.to/#/@nickler:nixbitcoin.org)             |
-| Erik Arvstedt | 4E28 0A8C 1B33 4C86 C26B  C134 3331 2B94 4DD9 7846 | erik.arvstedt@gmail.com | [@erikarvstedt:matrix.org](https://matrix.to/#/@erikarvstedt:matrix.org)           |
-| nixbitcoindev | 577A 3452 7F3E 2A85 E80F  E164 DD11 F9AD 5308 B3BA | nixbitcoin@i2pmail.org  | [@nixbitcoindev:nixbitcoin.org](https://matrix.to/#/@nixbitcoindev:nixbitcoin.org) |
-
-You can import a GPG key by running the following command with that individual’s fingerprint: `gpg --keyserver hkps://keys.openpgp.org --recv-keys "<fingerprint>"`. Ensure that you put quotes around fingerprints containing spaces.
-
-[Responsible disclosures](https://en.wikipedia.org/wiki/Coordinated_vulnerability_disclosure) may qualify for a reward from the nix-bitcoin security fund (see [below](#nix-bitcoin-security-fund)).
+**The nix-bitcoin security fund is closed and no longer accepts reward submissions or donations.**
+The former fund policy is preserved below for historical reference only; it no longer applies to new reports.
 
 ## Wall of Fame
 
-*empty*
-
+| Researcher | Report | Fix | Reward | Payout transaction |
+| :-- | :-- | :-- | :-- | :-- |
+| [haoxucu](https://github.com/haoxucu) | `netns-exec` was executable by all normal users | [`34a18f92`](https://github.com/fort-nix/nix-bitcoin/commit/34a18f92eeacc754e5857249aaf8decf24e98cde) | 5% of the fund | [`5b93fbad…eb888`](https://mempool.space/tx/5b93fbad4b9a2c35daaf40b74fc76f0b69d2b75bc4da927cd3398dbc432eb888) |
+| [haoxucu](https://github.com/haoxucu) | `lnd-create-macaroons` exposed the LND admin macaroon in `curl`'s process arguments | [`df184b6e`](https://github.com/fort-nix/nix-bitcoin/commit/df184b6e06cc3404add42ccf5ae68306395e8d6c) | 10% of the fund | [`5b93fbad…eb888`](https://mempool.space/tx/5b93fbad4b9a2c35daaf40b74fc76f0b69d2b75bc4da927cd3398dbc432eb888) |
+| Mehdi Kerimov | `fetch-release` did not verify `nar-hash.txt` when `nar-hash.txt.asc` contained an inline signed message | [`da27f270`](https://github.com/fort-nix/nix-bitcoin/commit/da27f27026d92841e3ea91e100608ed9854ac013) | 15% of the fund | [`a0c5821e…83f3`](https://mempool.space/tx/a0c5821edcd45af98e5c0818560535a24c1a6dba29b5a4a05149ab1003c783f3) |
 
 ## nix-bitcoin security fund
 
-The nix-bitcoin security fund rewards security researchers who discover and
-report vulnerabilities in nix-bitcoin or its upstream dependencies.\
-It is held on a 2 of 3 bitcoin multisig address and is open for donations:
+**This fund is closed.**
+Do not send donations to the former fund address.
+
+<details>
+<summary>Historical fund policy (no longer active)</summary>
+
+The nix-bitcoin security fund rewarded security researchers who discovered and reported vulnerabilities in nix-bitcoin or its upstream dependencies.
+The fund used the following 2-of-3 bitcoin multisig address:
+
 ```
 bc1qrpnz05n0yznaj6yw82wy8dhwuqz86s87vdlhq4cu92fus9qal25s555wsy
 ```
-([View balance](https://mempool.nixbitcoin.org/address/bc1qrpnz05n0yznaj6yw82wy8dhwuqz86s87vdlhq4cu92fus9qal25s555wsy))
+([View transaction history](https://mempool.space/address/bc1qrpnz05n0yznaj6yw82wy8dhwuqz86s87vdlhq4cu92fus9qal25s555wsy))
 
 
 Rewards are paid out as percentages of the total fund, rather than as fixed
 amounts.
 
-The nix-bitcoin developers [listed above](#reporting-a-vulnerability) each hold
-one key to the multisig address and collectively form the nix-bitcoin developer
-quorum.
+[@jonasnick](https://github.com/jonasnick), [@erikarvstedt](https://github.com/erikarvstedt), and [@nixbitcoindev](https://github.com/nixbitcoindev) each held one key to the multisig address and collectively formed the nix-bitcoin developer quorum.
 
 ### Eligible Vulnerabilities
 
@@ -102,3 +98,5 @@ measures) or complex/unlikely attack execution.
 * This document may be updated over time to ensure smooth and purposeful
   operation of the fund as an incentive for security researchers to investigate
   and report vulnerabilities in the nix-bitcoin ecosystem.
+
+</details>

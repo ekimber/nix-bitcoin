@@ -22,8 +22,8 @@ let
       test.shellcheckServices.enable = true;
     };
 
-    testScript = nodes: let
-      cfg = nodes.nodes.machine;
+    testScript = { nodes, ... }: let
+      cfg = nodes.machine;
       data = {
         data = cfg.test.data;
         tests = cfg.tests;
@@ -56,12 +56,23 @@ let
     extra-container.lib.buildContainers {
       inherit system legacyInstallDirs;
       config = {
+        imports = [ ./extra-container-workaround.nix ];
+
         # The container name has a 11 char length limit
         containers.nb-test = { config, ... }: {
           imports = [
             {
               config = {
-                extra = config.config.test.container;
+                extra = {
+                  # Defined here instead of in the container config because NixOS
+                  # 26.05 derives the container's `networking.interfaces` from
+                  # `localAddress`, which extra-container derives from
+                  # `addressPrefix`. Reading it from the container config would
+                  # thus be circular.
+                  addressPrefix = "10.225.255";
+                  inherit (config.config.test.container)
+                    enableWAN firewallAllowHost exposeLocalhost;
+                };
                 config = testConfig;
               };
             }
@@ -117,8 +128,9 @@ let
       # Needed because duplicity requires 270 MB of free temp space, regardless of backup size
       diskSize = 1024;
 
-      # Min. 800 MiB needed to avoid 'out of memory' errors
-      memorySize = lib.mkDefault 2048;
+      # The `netns` scenarios need more than 2 GiB: netns-isolation adds a
+      # network namespace per service, which costs a few hundred MiB of slab.
+      memorySize = lib.mkDefault 4096;
 
       # There are no perf gains beyond 3 cores.
       # Benchmark: Ryzen 7 2700 (8 cores), VM test `default` as of 34f6eb90.
